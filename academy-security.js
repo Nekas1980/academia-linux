@@ -15,7 +15,7 @@ const el=(tag,props={})=>{
   return node;
 };
 const translate=(pt,en)=>{try{return localStorage.getItem('academia-linux-lang')==='en'?en:pt}catch{return pt}};
-let api=null,user=null,seq=0,securityRow=null,currentAal='aal1',verifiedFactor=null,enrollingFactor=null,working=false;
+let api=null,user=null,seq=0,securityRow=null,currentAal='aal1',verifiedFactor=null,pendingFactor=null,enrollingFactor=null,working=false;
 const policy=pass=>typeof pass==='string'&&pass.length>=10&&/[a-z]/.test(pass)&&/[A-Z]/.test(pass)&&/[0-9]/.test(pass)&&/[^A-Za-z0-9]/.test(pass);
 const tracks=[
  ['', 'Selecionar percurso','Choose a track'],
@@ -98,9 +98,13 @@ async function checkMfa(){
  const [levelResult,factorResult]=await Promise.all([api.auth.mfa.getAuthenticatorAssuranceLevel(),api.auth.mfa.listFactors()]);
  if(levelResult.error)throw levelResult.error;
  if(factorResult.error)throw factorResult.error;
+ const all=Array.isArray(factorResult.data?.all)?factorResult.data.all:[];
  const factors=(factorResult.data?.totp||[]).filter(f=>f.status==='verified');
  currentAal=levelResult.data?.currentLevel||'aal1';
  verifiedFactor=factors[0]||null;
+ // listFactors().totp devolve apenas fatores verificados; .all inclui os pendentes.
+ // Nunca remover automaticamente fatores verificados ou de outro tipo.
+ pendingFactor=all.find(f=>f.factor_type==='totp'&&f.status==='unverified'&&f.friendly_name==='Academia Linux')||null;
 }
 function showMfa(host){
  const box=section(translate('2. Autenticação multifator (MFA)','2. Multi-factor authentication (MFA)'),'academy-mfa-panel');
@@ -131,6 +135,35 @@ function showMfa(host){
   });
   box.append(form);host.append(box);return;
  }
+ if(pendingFactor){
+  note(box,translate(
+   'Foi iniciada anteriormente uma associação MFA que ficou por confirmar. Podes reiniciar apenas essa configuração pendente, sem eliminar a tua conta ou fatores já validados.',
+   'An earlier MFA setup was started but not confirmed. You can restart only that pending setup without deleting your account or verified factors.'
+  ),'warn');
+  const reset=button(translate('Reiniciar configuração MFA pendente','Restart pending MFA setup'),'academy-restart-mfa');
+  box.append(reset);
+  const resultNote=note(box,'');
+  reset.addEventListener('click',async()=>{
+   if(working||!pendingFactor||pendingFactor.status!=='unverified')return;
+   // A alteração requer uma ação explícita; este botão não apaga MFA validado.
+   working=true;reset.disabled=true;
+   try{
+    const factors=await api.auth.mfa.listFactors();
+    if(factors.error)throw factors.error;
+    const actual=(factors.data?.all||[]).find(f=>f.id===pendingFactor.id&&f.status==='unverified'&&f.factor_type==='totp'&&f.friendly_name==='Academia Linux');
+    if(!actual)throw Error(translate('O fator já não está pendente. Atualiza a página.','Factor is no longer pending. Refresh the page.'));
+    const removed=await api.auth.mfa.unenroll({factorId:actual.id});
+    if(removed.error)throw removed.error;
+    pendingFactor=null;
+    await refresh();
+   }catch(err){
+    resultNote.textContent=translate('Não foi possível reiniciar o MFA: ','Could not restart MFA: ')+String(err.message||err);
+    reset.disabled=false;
+   }finally{working=false}
+  });
+  host.append(box);
+  return;
+ }
  note(box,translate('Ainda não tens MFA configurado. Ativa-o para concluir o primeiro acesso.','MFA is not enrolled. Set it up to complete onboarding.'),'warn');
  const start=button(translate('Configurar aplicação autenticadora','Set up authenticator'),'academy-enroll');
  box.append(start);
@@ -148,7 +181,23 @@ function showMfa(host){
     else if(qr.trim().startsWith('<svg'))img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(qr);
     staging.append(img);
    }
-   note(staging,translate('Digitaliza o QR com a tua aplicação autenticadora. O QR contém uma credencial secreta: nunca o partilhes nem o coloques em capturas de ecrã.','Scan the QR in your authenticator app. It contains a private secret: never share it or include it in screenshots.'),'warn');
+   note(staging,translate('Digitaliza o QR com a função Ler QR do 2FAS. Não partilhes o QR nem o incluas em capturas de ecrã.','Scan the QR with the 2FAS QR scanner. Do not share the QR or include it in screenshots.'),'warn');
+   const secret=result.data.totp?.secret;
+   if(typeof secret==='string'&&secret.length>0){
+    const manual=button(translate('Não consegues ler o QR? Introduzir chave manualmente','Cannot scan QR? Enter setup key manually'),'academy-manual-mfa');
+    manual.className='btn outline';
+    staging.append(manual);
+    const secretPanel=el('div',{id:'academy-mfa-manual',hidden:''});
+    note(secretPanel,translate('No 2FAS escolhe Adicionar conta → Introdução manual. Nome: Academia Linux. Utiliza a chave abaixo e o tipo TOTP de 6 dígitos. Nunca partilhes esta chave.','In 2FAS choose Add account → Manual entry. Name: Academia Linux. Use the key below and six-digit TOTP. Never share this secret.'),'warn');
+    const secretText=el('code',{id:'academy-mfa-secret',text:secret});
+    secretPanel.append(secretText);
+    staging.append(secretPanel);
+    manual.addEventListener('click',()=>{
+     const visible=secretPanel.hidden;
+     secretPanel.hidden=!visible;
+     manual.textContent=visible?translate('Ocultar chave privada','Hide private key'):translate('Mostrar chave manual','Show manual setup key');
+    });
+   }
    const form=el('form',{className:'auth-form'});
    form.append(field('academy-enroll-code',translate('Código de seis dígitos','Six-digit code'),'text',{inputmode:'numeric',pattern:'[0-9]{6}',maxlength:'6',autocomplete:'one-time-code',required:''}));
    const verify=el('button',{className:'btn primary',type:'submit',text:translate('Ativar MFA','Activate MFA')});

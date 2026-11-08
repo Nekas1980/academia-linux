@@ -29,3 +29,6 @@
 .instructor-scroll th{color:var(--sea);background:#eff5f0}
 .academy-progress-list{padding-left:20px;color:#dfefe5;font-size:13px}
 .auth-account-section{padding:12px;margin-top:16px}
+
+#academy-mfa-manual{max-width:100%;padding:12px;margin:10px 0;border:1px solid #557f72;border-radius:7px;background:#0b1a16}
+#academy-mfa-secret{display:block;white-space:normal;overflow-wrap:anywhere;user-select:text;padding:12px;color:#efffe8;background:#152821;border:1px dashed #7ea590;border-radius:6px;line-height:1.6;letter-spacing:.06em;font-size:14px}
