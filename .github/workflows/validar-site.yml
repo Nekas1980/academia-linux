@@ -1,7 +1,7 @@
 name: Testar Academia Linux
 on:
   push:
-    branches: [main, v2-paginas-laboratorios-videos-registo]
+    branches: [main, qa-v2-interacoes-e2e]
   pull_request:
     branches: [main]
 permissions:
@@ -23,3 +23,7 @@ jobs:
           node --check auth-config.js
       - name: Testar estrutura e conteúdos
         run: node tests.mjs
+      - name: Instalar dependência de teste DOM
+        run: npm install --no-save --no-package-lock jsdom@26
+      - name: Simular navegação e funcionalidades no navegador
+        run: node smoke-test.mjs
