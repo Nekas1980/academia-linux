@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1726">
+<meta name="description" content="Painel reservado para acompanhamento pedagógico da Academia Linux.">
+<title>Painel do formador | Academia Linux</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="portal.css">
+<script src="auth-config.js" defer></script>
+<script src="instructor.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner">
+<a class="brand" href="index.html"><b>$_</b><span>academia<strong>linux</strong><small>OPEN LEARNING LAB</small></span></a>
+<nav class="nav" aria-label="Navegação"><a href="index.html">Início</a><a href="cursos.html">Cursos</a><a href="comandos.html">Comandos</a><a href="laboratorios.html">Laboratórios</a><a href="inscricao.html">Conta</a></nav>
+</div></header>
+<main id="main">
+<section class="subhero"><div class="container"><span class="tag">ACADEMIA LINUX · GESTÃO PEDAGÓGICA</span><h1>Painel do formador</h1><p>Indicadores de aprendizagem e atividades autenticadas, com acesso restrito.</p></div></section>
+<section class="page-main"><div class="container">
+<div class="auth-note warn" id="instructor-status" role="status">A validar sessão, MFA e permissões do formador...</div>
+<div id="instructor-panel" hidden>
+<div class="panel"><h2>Progresso dos alunos</h2><p class="mini">Os dados de exercícios são autodeclarados pelo navegador. Não equivalem a exames supervisionados ou certificados.</p>
+<div id="instructor-summary" class="instructor-scroll"></div></div>
+<div class="panel" style="margin-top:20px"><h2>Atividade pedagógica recente</h2>
+<p class="mini">Somente unidade aberta, unidade concluída e laboratório concluído. Sem IP, passwords, códigos TOTP ou conteúdo dos comandos.</p>
+<div id="instructor-activity" class="instructor-scroll"></div></div>
+</div>
+<div class="panel" style="margin-top:20px"><h2>Registos de autenticação e segurança</h2>
+<p>Os eventos de login, saída, alteração de palavra-passe e MFA devem ser consultados diretamente nos Audit Logs do Supabase. Não são publicados numa API acessível aos alunos.</p>
+<a class="btn outline" target="_blank" rel="noopener noreferrer" href="https://supabase.com/dashboard">Abrir Supabase Dashboard</a></div>
+</div></section></main>
+<footer class="footer"><div class="container footer-inner"><div><strong>Academia Linux</strong><p>Painel de gestão: acesso administrativo e MFA obrigatório.</p></div>
+<a href="privacidade.html">Privacidade</a></div></footer>
+</body></html>
