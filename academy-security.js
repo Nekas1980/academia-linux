@@ -181,7 +181,23 @@ function showMfa(host){
     else if(qr.trim().startsWith('<svg'))img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(qr);
     staging.append(img);
    }
-   note(staging,translate('Digitaliza o QR com a tua aplicação autenticadora. O QR contém uma credencial secreta: nunca o partilhes nem o coloques em capturas de ecrã.','Scan the QR in your authenticator app. It contains a private secret: never share it or include it in screenshots.'),'warn');
+   note(staging,translate('Digitaliza o QR com a função Ler QR do 2FAS. Não partilhes o QR nem o incluas em capturas de ecrã.','Scan the QR with the 2FAS QR scanner. Do not share the QR or include it in screenshots.'),'warn');
+   const secret=result.data.totp?.secret;
+   if(typeof secret==='string'&&secret.length>0){
+    const manual=button(translate('Não consegues ler o QR? Introduzir chave manualmente','Cannot scan QR? Enter setup key manually'),'academy-manual-mfa');
+    manual.className='btn outline';
+    staging.append(manual);
+    const secretPanel=el('div',{id:'academy-mfa-manual',hidden:''});
+    note(secretPanel,translate('No 2FAS escolhe Adicionar conta → Introdução manual. Nome: Academia Linux. Utiliza a chave abaixo e o tipo TOTP de 6 dígitos. Nunca partilhes esta chave.','In 2FAS choose Add account → Manual entry. Name: Academia Linux. Use the key below and six-digit TOTP. Never share this secret.'),'warn');
+    const secretText=el('code',{id:'academy-mfa-secret',text:secret});
+    secretPanel.append(secretText);
+    staging.append(secretPanel);
+    manual.addEventListener('click',()=>{
+     const visible=secretPanel.hidden;
+     secretPanel.hidden=!visible;
+     manual.textContent=visible?translate('Ocultar chave privada','Hide private key'):translate('Mostrar chave manual','Show manual setup key');
+    });
+   }
    const form=el('form',{className:'auth-form'});
    form.append(field('academy-enroll-code',translate('Código de seis dígitos','Six-digit code'),'text',{inputmode:'numeric',pattern:'[0-9]{6}',maxlength:'6',autocomplete:'one-time-code',required:''}));
    const verify=el('button',{className:'btn primary',type:'submit',text:translate('Ativar MFA','Activate MFA')});
