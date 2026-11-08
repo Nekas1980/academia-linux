@@ -22,3 +22,10 @@
 .academy-mfa-qr{display:block;width:min(230px,100%);height:auto;background:white;border-radius:8px;padding:10px;margin:12px auto}
 #auth-session{min-width:0}
 #auth-session .btn{margin:4px}
+
+.instructor-scroll{width:100%;overflow-x:auto}
+.instructor-scroll table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px}
+.instructor-scroll th,.instructor-scroll td{padding:11px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.instructor-scroll th{color:var(--sea);background:#eff5f0}
+.academy-progress-list{padding-left:20px;color:#dfefe5;font-size:13px}
+.auth-account-section{padding:12px;margin-top:16px}
