@@ -1,0 +1,25 @@
+name: Testar Academia Linux
+on:
+  push:
+    branches: [main, v2-paginas-laboratorios-videos-registo]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validar-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check curriculum.js
+          node --check conteudos-extra.js
+          node --check portal.js
+          node --check auth.js
+          node --check auth-config.js
+      - name: Testar estrutura e conteúdos
+        run: node tests.mjs
