@@ -27,7 +27,19 @@ $('#auth-state').textContent= session?tr('Sessão autenticada.','Authenticated s
 $('#auth-state').className='auth-note'+(configured?'':' warn');
 $('#auth-session').hidden=!session;
 form.hidden=!!session;
-if(session){const user=$('#auth-user');user.textContent=tr('Conta: ','Account: ')+(session.user?.email||'');}
+if(session){
+ const user=$('#auth-user');user.textContent=tr('Conta: ','Account: ')+(session.user?.email||'');
+ const next=(new URLSearchParams(location.search).get('next')||'').toUpperCase();
+ let link=$('#auth-next');
+ if(!link){link=document.createElement('a');link.id='auth-next';link.className='btn primary';$('#auth-session').appendChild(link)}
+ if(/^UC(?:12|13|14|16)$/.test(next)){
+  link.href='aula.html?uc='+encodeURIComponent(next);
+  link.textContent=tr('Continuar para a unidade reservada →','Continue to the restricted lesson →');
+ }else{
+  link.href='cursos.html';
+  link.textContent=tr('Consultar unidades →','Browse learning units →');
+ }
+}
 for(const id of ['auth-email','auth-password','auth-consent','auth-submit']){const el=$('#'+id);if(el)el.disabled=!configured}
 }
 function addListeners(){
