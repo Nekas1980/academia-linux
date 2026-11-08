@@ -208,6 +208,35 @@ async function showProfile(host){
  });
  box.append(form);host.append(box);
 }
+
+async function showProgress(host){
+ const sectionEl=section(translate('4. Acompanhamento da aprendizagem','4. Learning progress'),'academy-my-progress');
+ note(sectionEl,translate('Atividades registadas na tua conta. Estes dados de exercícios simulados não substituem avaliação certificada.','Activity saved to your account. Simulated exercises are not certified assessments.'));
+ try{
+  const {data,error}=await api.from('student_progress')
+   .select('activity_type,activity_id,completed_at').eq('user_id',user.id)
+   .order('completed_at',{ascending:false}).limit(100);
+  if(error)throw error;
+  const completedUnits=(data||[]).filter(x=>x.activity_type==='unit').length;
+  const completedLabs=(data||[]).filter(x=>x.activity_type==='lab').length;
+  sectionEl.append(el('p',{className:'academy-security-note success',text:
+    translate('Unidades concluídas: ','Units completed: ')+completedUnits+' · '+
+    translate('Laboratórios concluídos: ','Labs completed: ')+completedLabs
+  }));
+  if(data?.length){
+   const list=el('ul',{className:'academy-progress-list'});
+   for(const item of data.slice(0,10)){
+    const date=item.completed_at?new Date(item.completed_at).toLocaleDateString():''; 
+    list.append(el('li',{text:item.activity_id+' · '+date}));
+   }
+   sectionEl.append(list);
+  }
+ }catch{
+  note(sectionEl,translate('A sincronização do progresso ainda não está disponível.','Progress synchronization is not available yet.'),'warn');
+ }
+ host.append(sectionEl);
+}
+
 async function refresh(){
  const epoch=++seq;
  const host=screen();if(!host||!api||!user)return;
@@ -228,7 +257,7 @@ async function refresh(){
   if(data.must_change_password){requiredPassword(host);return}
   await checkMfa();if(epoch!==seq)return;
   showMfa(host);
-  if(currentAal==='aal2')await showProfile(host);
+  if(currentAal==='aal2'){await showProfile(host);if(epoch===seq)await showProgress(host)}
  }catch(error){
   if(epoch!==seq)return;
   host.replaceChildren();
