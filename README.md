@@ -2,6 +2,41 @@
 
 Plataforma gratuita de aprendizagem Linux em **português de Portugal e inglês**, alojável no **GitHub Pages**, com navegação por páginas, cursos, comandos, laboratórios e vídeos. Projeto independente, sem chat, sem execução real de comandos e sem analytics instalados.
 
+## Modelo misto: público + alunos registados (preparado em 08/11/2026)
+
+### Matriz de acesso
+
+| Área | Visitante sem conta | Aluno com sessão válida |
+|---|---|---|
+| Página inicial, história, distribuições, videoteca, biblioteca de comandos | Público | Público |
+| UC01–UC11 e UC15 (iniciação / intermédio) | Acesso às 12 unidades completas | Acesso às mesmas 12 unidades |
+| UC12, UC13, UC14 e UC16 (aplicação / avançado) | Apenas título, resumo e convite a entrar | Conteúdo obtido de `registered_lessons` quando publicado |
+| Laboratórios simulados | Permanecem públicos nesta fase | Permanecem públicos nesta fase |
+| Histórico pessoal sincronizado | Não disponível | Preparado em `student_progress` para futuras funcionalidades |
+
+**Estado real:** a parte visual e a estrutura SQL de controlo de acesso estão implementadas. A inscrição e a leitura autenticada ainda requerem um projeto Supabase configurado. Até lá, as quatro unidades avançadas mostram um ecrã informativo e não carregam uma aula completa.
+
+### Como concluir a ativação
+
+1. Criar e associar um projeto Supabase à academia, com controlo administrativo do proprietário.
+2. Em **Authentication → Providers → Email**, manter **Confirm Email** ativo. Configurar envio de mensagens (SMTP apropriado), limites e proteção contra abuso.
+3. Em **Authentication → URL Configuration**, usar:
+   - **Site URL:** `https://nekas1980.github.io/academia-linux/`
+   - **Redirect URLs:** `https://nekas1980.github.io/academia-linux/inscricao.html`
+4. Executar `backend/supabase/001_modelo_misto.sql` no SQL Editor. Rever grants e políticas RLS e testar com dois utilizadores distintos antes de abrir inscrições.
+5. Preencher **somente** os valores públicos `url` e `publishableKey` do ficheiro `auth-config.js` (nunca uma chave administrativa).
+6. Inserir as lições avançadas em `public.registered_lessons` diretamente no backend, para `unit_id` UC12, UC13, UC14 e UC16, em `language` pt/en, com `published = true`, depois de validar o formato e o conteúdo. Não incluir os textos premium no GitHub.
+7. Verificar: visitante anónimo recebe zero linhas; inscrito autenticado consegue ler as aulas publicadas; utilizador A não lê nem modifica progresso do utilizador B. Testar confirmação de email, login, recuperação e logout.
+8. Atualizar a informação RGPD da página `privacidade.html`, incluindo identidade/contactos do responsável, finalidades, retenção, fornecedores, direitos e transferências aplicáveis, antes de recolher inscrições.
+
+### Segurança e limites
+
+- **Não é uma proteção por JavaScript**: o backend é quem controla a leitura das aulas através de políticas RLS. Ocultar botões ou redirecionar no browser não protege conteúdos publicados num repositório GitHub aberto.
+- Os ficheiros públicos agora contêm apenas metadados das quatro unidades avançadas. **As versões anteriormente publicadas permanecem potencialmente acessíveis pelo histórico Git**, pelo que não se deve considerar o texto antigo confidencial. Os novos módulos reservados devem ser escritos e mantidos exclusivamente no backend.
+- As tarefas de laboratório e os comandos de referência continuam a ser exercícios **simulados e públicos**. Reservar laboratórios reais exige uma infraestrutura isolada e autenticação adicional.
+- A infraestrutura Supabase **não foi criada, ligada nem testada com contas reais** por esta alteração.
+- Os conteúdos avançados não aparecem automaticamente após o registo: é necessário carregá-los e publicá-los na tabela autorizada.
+
 ## Estrutura da versão 2
 
 | Página | Funcionalidade |
