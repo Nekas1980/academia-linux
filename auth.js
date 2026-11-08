@@ -76,7 +76,7 @@ async function connect(){
 if(!configured)return;
 if(client){const {data,error}=await client.auth.getSession();if(!error){session=data.session;buttons();announce()}return;}
 try{
-await new Promise((resolve,reject)=>{
+if(!window.supabase?.createClient)await new Promise((resolve,reject)=>{
 const script=document.createElement('script');
 script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 script.referrerPolicy='no-referrer';
