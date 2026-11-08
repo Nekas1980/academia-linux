@@ -1,76 +1,101 @@
 # Academia Linux · Open Learning Lab
 
-Projeto educativo **gratuito, bilingue (português de Portugal / English)** e independente, construído em HTML, CSS e JavaScript sem dependências de compilação, sem chat e sem serviço de backend.
+Plataforma gratuita de aprendizagem Linux em **português de Portugal e inglês**, alojável no **GitHub Pages**, com navegação por páginas, cursos, comandos, laboratórios e vídeos. Projeto independente, sem chat, sem execução real de comandos e sem analytics instalados.
 
-## Primeira versão
+## Estrutura da versão 2
 
-- 16 unidades de aprendizagem (UC01–UC16) com objetivos, explicações originais, comandos, questão de revisão e documentação de referência.
-- História de GNU/Linux, comparação de seis distribuições e gestores de pacotes.
-- Laboratório de terminal **simulado** com comandos permitidos e saídas fictícias. **Não executa comandos locais ou remotos.**
-- Quatro vídeos provenientes de canais do YouTube verificados (links de origem; reprodução embebida apenas após clique do visitante).
-- Pesquisa por tema, comando ou ferramenta, filtros por nível, acessibilidade básica e interface adaptada a telemóvel.
-- Progresso de UC e preferência de idioma guardados em `localStorage` do próprio navegador; sem contas de utilizador, analytics ou cookies analíticos.
+| Página | Funcionalidade |
+|---|---|
+| `index.html` | Homepage simplificada com ligações para todas as áreas |
+| `cursos.html` | 16 unidades PT/EN, pesquisa e filtros de nível |
+| `aula.html?uc=UC01` | Página própria da unidade, objetivos, matéria, comandos e quiz |
+| `comandos.html` | 53 comandos de referência, categorias, exemplos e cópia |
+| `laboratorios.html` | 12 missões simuladas por nível e validação passo a passo |
+| `videos.html` | 8 vídeos externos, filtros temáticos, grelha/lista e três tamanhos de reprodução |
+| `inscricao.html` | Estrutura para registo, login e recuperação por email via Supabase Auth |
+| `privacidade.html` | Informação inicial de privacidade, a rever antes de ativar contas |
 
-### Ficheiros
+Outros ficheiros: `portal.css`, `portal.js`, `conteudos-extra.js`, `curriculum.js`, `auth.js`, `auth-config.js`, `tests.mjs`, `.github/workflows/validar-site.yml` e `.nojekyll`.
 
-```text
-academia-linux/
-├── index.html       # entrada principal e estrutura
-├── styles.css       # apresentação responsiva
-├── curriculum.js    # conteúdos educativos PT/EN
-├── app.js           # navegação, pesquisa, lições e simulação
-├── favicon.svg      # ícone original do projeto
-├── .nojekyll         # compatibilidade GitHub Pages
-└── README.md         # este ficheiro
-```
+Os antigos `app.js` e `styles.css` pertencem à versão inicial; a nova navegação não depende deles.
 
-## Executar localmente
+## Publicação no GitHub Pages
 
-Abrir `index.html` no navegador ou, para testar num servidor HTTP simples:
+1. Abrir `https://github.com/Nekas1980/academia-linux`.
+2. Em **Settings → Pages**, manter **Deploy from a branch → main → /(root)**.
+3. Depois do deployment, abrir **https://nekas1980.github.io/academia-linux/**.
+4. Cada alteração integrada em `main` é publicada pelo GitHub Pages, sem domínio próprio e sem servidor local.
+5. Em **Actions**, consultar `Testar Academia Linux` e `pages build and deployment`.
+
+## Inscrição de alunos — situação importante
+
+**Não existem contas ativas nesta versão enquanto `auth-config.js` estiver vazio.** O formulário fica desativado; nenhuma palavra-passe é recolhida. O conteúdo educativo permanece público.
+
+GitHub Pages é alojamento estático e não executa código de servidor: não é possível validar emails, guardar passwords em segurança ou bloquear autenticamente as páginas só com HTML/JavaScript. A funcionalidade de autenticação foi preparada com **Supabase Auth**, mas exige configuração do titular do projeto.
+
+### Ativar Supabase Auth de forma segura
+
+1. Criar um projeto no [Supabase Dashboard](https://supabase.com/dashboard).
+2. Em **Authentication → Providers**, configurar Email e a confirmação de endereço. Antes de abertura pública, configurar um SMTP adequado e limites de utilização.
+3. Em **Authentication → URL Configuration**, definir:
+   - Site URL: `https://nekas1980.github.io/academia-linux/`
+   - Redirect URL autorizada: `https://nekas1980.github.io/academia-linux/inscricao.html`
+4. Em **Project Settings**, obter **Project URL** (HTTPS) e uma chave **publishable** (prefixo `sb_publishable_`).
+5. Preencher **apenas** os dois campos públicos de `auth-config.js`:
+   ```js
+   window.ACADEMY_AUTH_CONFIG = {
+     url: 'https://exemplo-id.supabase.co',
+     publishableKey: 'sb_publishable_EXEMPLO_PUBLICO'
+   };
+   ```
+6. **Nunca** colocar no repositório chaves secretas, `service_role`, tokens administrativos ou credenciais de utilizadores. Se futuramente houver base de dados de progresso, criar tabelas com **Row Level Security (RLS)** corretamente definida.
+7. Revisar a informação de privacidade, a base jurídica, contactos de responsável, conservação e direitos de titulares antes de ativar inscrições reais.
+8. Testar a criação de conta, confirmação de email, início e fim de sessão e recuperação de password com contas de teste.
+
+A inscrição, por si só, **não restringe o acesso às páginas públicas nem sincroniza progresso**. Para uma área de aluno privada ou sincronização de avaliação, será necessário um backend autorizado com controlos de acesso.
+
+Referências:
+- https://supabase.com/docs/guides/auth/passwords
+- https://supabase.com/docs/reference/javascript/installing
+- https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
+
+## Laboratórios
+
+- A consola é um simulador limitado e seguro. **Não é um shell Linux**: as respostas, processos, utilizadores, ficheiros e endereços IP são demonstrativos.
+- As 12 missões pedem sequências de comandos, com resultado de aprendizagem validado pela correspondência de texto.
+- A biblioteca apresenta 53 comandos de referência, mas as demonstrações visuais não substituem um laboratório com máquinas virtuais.
+- O estado das unidades, missões e idioma é guardado no **localStorage do navegador**; não há perfis nem sincronização nesta fase.
+
+## Vídeos
+
+- 8 ligações a vídeos publicados nos respetivos canais do YouTube.
+- Podem ser reproduzidos no leitor com maior privacidade (`youtube-nocookie.com`) após clique ou abertos diretamente no YouTube.
+- Existem modos de tamanho pequeno, normal e cinema e organização grelha/lista.
+- Não existem descarregamentos ou cópias dos vídeos. A incorporação pode ser desativada pelos autores.
+
+## Testes
+
+Executar num clone do projeto:
 
 ```bash
-cd academia-linux
-python3 -m http.server 8000
+node tests.mjs
+node --check portal.js
+node --check auth.js
 ```
 
-Depois aceder a `http://localhost:8000`.
+O GitHub Actions executa os testes automaticamente.
 
-## Publicar gratuitamente no GitHub Pages — repositório independente
+## Roadmap
 
-1. Em https://github.com/new criar um repositório **público** chamado `academia-linux`, sem carregar ficheiros sensíveis.
-2. Num terminal, na pasta deste projeto:
-
-   ```bash
-   git init
-   git branch -M main
-   git add .
-   git commit -m "Criar Academia Linux bilingue — versão inicial"
-   git remote add origin https://github.com/Nekas1980/academia-linux.git
-   git push -u origin main
-   ```
-
-   O exemplo utiliza o utilizador GitHub atual (`Nekas1980`). Se usar outra conta, altere o URL. Crie o repositório vazio; caso já tenha um README remoto, alinhe as branches antes do push.
-
-3. No GitHub, abrir **Settings > Pages > Build and deployment > Deploy from a branch**; escolher `main` e `/(root)` e guardar.
-4. Depois de o GitHub confirmar o deployment, aceder ao endereço `https://Nekas1980.github.io/academia-linux/`.
-5. Não é necessário domínio próprio; caso seja adquirido, pode ser ligado mais tarde.
-
-Documentação: https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
-
-## Segurança e conteúdo
-
-- A consola é um simulador com uma lista fixa de comandos e saídas fabricadas. Os dados de processos, endereços IP (por exemplo `192.0.2.10`) e logs apresentados são **fictícios** e estão identificados como demonstração.
-- As tarefas relacionadas com segurança destinam-se apenas a **ambientes próprios ou com autorização expressa**.
-- Vídeos do YouTube não foram descarregados ou redistribuídos. A visualização embebida só é criada após escolha do utilizador; o YouTube pode recolher dados quando é carregado. O site só guarda localmente o idioma e o progresso.
-- A academia é independente e não é afiliada à Linux Foundation, Debian, Ubuntu, Fedora, Arch, openSUSE, Kali ou aos canais de vídeo.
-- A conclusão de unidades é um indicador local de progresso e não é uma certificação oficial.
-
-## Ideias para fases seguintes
-
-Percursos dedicados a administração Debian/Ubuntu, ambientes Fedora/RHEL, automação Bash, redes e SOC/Blue Team, laboratórios isolados com máquinas virtuais e avaliação prática. Estatísticas de visitas exigirão um serviço adicional e uma revisão da política de privacidade.
+- Autenticação Supabase e política de privacidade operacional.
+- Área de aluno com progressão por UC, se existir serviço backend com RLS.
+- Percursos especializados Debian/Ubuntu, Kali, Fedora/RHEL, openSUSE e Arch.
+- Laboratórios Linux reais em VMs isoladas, complementares às simulações.
+- Analytics com documentação e controlos de privacidade.
+- Dicionário de comandos por distribuição, avaliações e evidências práticas.
 
 ---
 
 ## English summary
 
-**Academia Linux** is a free, independent, static learning website in European Portuguese and English. Its first version includes 16 short learning units, distribution comparisons, an interactive **simulated** Linux terminal, review questions and links to official documentation and YouTube videos. No shell commands are actually executed, no account is required, and progress is stored only in the browser. Publish from a public repository on GitHub Pages by enabling **Settings > Pages > Deploy from a branch > main > /(root)**.
+Academia Linux is an independent, bilingual (European Portuguese/English) learning site with **8 separate pages**, **16 course units**, **53 command examples**, **12 safe simulated labs**, **8 YouTube videos** and optional registration prepared for Supabase Auth. The homepage is intentionally short. The account UI remains disabled until secure authentication is configured; public lessons remain open. No real shell commands are executed.
