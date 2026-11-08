@@ -4,5 +4,6 @@
 
 window.ACADEMY_AUTH_CONFIG = {
   url: 'https://msxleoiumrdfzieibjvn.supabase.co',
-  publishableKey: 'sb_publishable_SdEWKzsiYWkpECjS3tDi_A_n3cKjkes'
+  publishableKey: 'sb_publishable_SdEWKzsiYWkpECjS3tDi_A_n3cKjkes',
+  enablePublicSignup: false
 };
