@@ -50,7 +50,7 @@ const f=$('#auth-form');if(!f)return;
 $$('[data-auth-tab]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.authTab==='signup'&&!allowSignup)return;tab=b.dataset.authTab;recovery=false;msg('');buttons()}));
 f.addEventListener('submit',async e=>{
 e.preventDefault();if(!configured||!client||(tab==='signup'&&!allowSignup)){msg(tr('Ação indisponível.','Action unavailable.'),true);return}
-const email=$('#auth-email').value.trim(),password=$('#auth-password').value,btn=$('#auth-submit');if(tab!=='recover'&&password.length<10){msg(tr('A palavra-passe precisa de pelo menos 10 caracteres.','Password must have at least 10 characters.'),true);return}
+const email=$('#auth-email').value.trim(),password=$('#auth-password').value,btn=$('#auth-submit');if((tab==='signup'||recovery)&&password.length<10){msg(tr('A palavra-passe precisa de pelo menos 10 caracteres.','Password must have at least 10 characters.'),true);return}
 if(tab==='signup'&&!$('#auth-consent').checked){msg(tr('É necessário ler e aceitar a informação de privacidade.','Please read and accept the privacy information.'),true);return}
 btn.disabled=true;btn.textContent=tr('A processar...','Processing...');
 try{
