@@ -107,6 +107,18 @@ for (const page of pages) {
   dom.window.close();
 }
 {
+  const {doc,window,dom}=openPage('cursos.html');
+  // User-provided strings must not be interpreted as executable markup.
+  const attack='<img src=x onerror="window.__xssTriggered=1"><script>window.__xssTriggered=2</script>';
+  window.ACADEMY.units[0].pt.title=attack;
+  click(window,doc.querySelector('#en'));
+  click(window,doc.querySelector('#pt'));
+  assert.equal(doc.querySelectorAll('#course-cards script,#course-cards img').length,0,'No injected executable markup');
+  assert.equal(window.__xssTriggered,undefined,'No XSS execution');
+  assert.match(doc.querySelector('#course-cards .card h3').textContent,/onerror/,'Attack string is displayed as plain text');
+  dom.window.close();
+}
+{
   const {doc,window,dom}=openPage('comandos.html');
   assert.ok(doc.querySelectorAll('.cmd-card').length>=50,'50+ commands');
   change(window,doc.querySelector('#cmd-query'),'pwd');
