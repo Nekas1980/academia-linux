@@ -203,4 +203,44 @@ for (const page of pages) {
   assert.ok(doc.querySelector('#academy-mfa-panel'),'MFA onboarding follows password change');
   dom.window.close();
 }
+
+{
+  // Registo MFA iniciado mas ainda não verificado: reiniciar apenas esse fator.
+  const {doc,window,dom}=openPage('inscricao.html');
+  window.eval(source('auth-config.js'));
+  const mockUser={id:'00000000-0000-4000-8000-000000000777',email:'student@example.invalid',app_metadata:{}};
+  let factors=[{id:'pending-1',factor_type:'totp',friendly_name:'Academia Linux',status:'unverified'}];
+  let removed=0;
+  const fakeClient={
+    auth:{
+      getSession:async()=>({data:{session:{user:mockUser}},error:null}),
+      getUser:async()=>({data:{user:mockUser},error:null}),
+      onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),
+      mfa:{
+        getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:'aal1',nextLevel:'aal1'},error:null}),
+        listFactors:async()=>({data:{totp:factors.filter(x=>x.status==='verified'),all:factors},error:null}),
+        unenroll:async({factorId})=>{
+          assert.equal(factorId,'pending-1','Only the pending factor may be removed');
+          const item=factors.find(x=>x.id===factorId);
+          assert.equal(item?.status,'unverified','Never remove a verified factor');
+          removed++;factors=factors.filter(x=>x.id!==factorId);return {data:{id:factorId},error:null};
+        }
+      }
+    },
+    from:table=>({
+      select:()=>({eq:()=>({maybeSingle:async()=>({data:table==='student_security'?{must_change_password:false}:null,error:null})})})
+    })
+  };
+  window.supabase={createClient:()=>fakeClient};
+  window.eval(source('auth.js'));
+  window.eval(source('academy-security.js'));
+  doc.dispatchEvent(new window.Event('DOMContentLoaded'));
+  await new Promise(resolve=>setTimeout(resolve,45));
+  assert.ok(doc.querySelector('#academy-restart-mfa'),'Pending factor must be recoverable');
+  click(window,doc.querySelector('#academy-restart-mfa'));
+  await new Promise(resolve=>setTimeout(resolve,45));
+  assert.equal(removed,1,'Only one pending MFA factor should be unenrolled');
+  assert.ok(doc.querySelector('#academy-enroll'),'Enrollment can restart after cleanup');
+  dom.window.close();
+}
 console.log('OK: '+tested+' pages + public/premium gates, PT/EN, quiz, commands, missions, videos, and signup safeguards.');
