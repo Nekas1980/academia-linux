@@ -49,6 +49,7 @@ Plataforma gratuita de aprendizagem Linux em **português de Portugal e inglês*
 | `videos.html` | 8 vídeos externos, filtros temáticos, grelha/lista e três tamanhos de reprodução |
 | `inscricao.html` | Estrutura para registo, login e recuperação por email via Supabase Auth |
 | `privacidade.html` | Informação inicial de privacidade, a rever antes de ativar contas |
+| `peppery.html` | Peppery Linux, perfis técnicos e documentação da distribuição em desenvolvimento |
 
 Outros ficheiros: `portal.css`, `portal.js`, `conteudos-extra.js`, `curriculum.js`, `auth.js`, `auth-config.js`, `tests.mjs`, `.github/workflows/validar-site.yml` e `.nojekyll`.
 
@@ -120,6 +121,10 @@ node --check auth.js
 
 O GitHub Actions executa os testes automaticamente.
 
+### Renderização HTML e prevenção de XSS
+
+O ficheiro `portal.js` utiliza um renderizador com `DOMParser` e cópia de nós através de uma **lista restrita de elementos e atributos**. Não aceita elementos `script`, eventos `on*`, `javascript:` em ligações nem HTML/SVG arbitrário. Os dados dinâmicos continuam a ser codificados como texto. A proteção será revista antes de aceitar conteúdos criados por alunos ou importados de terceiros. Existem testes funcionais de regressão em `smoke-test.mjs`; esta mitigação não substitui auditoria completa de segurança.
+
 ## Roadmap
 
 - Autenticação Supabase e política de privacidade operacional.
@@ -133,7 +138,7 @@ O GitHub Actions executa os testes automaticamente.
 
 ## English summary
 
-Academia Linux is an independent, bilingual (European Portuguese/English) learning site with **8 separate pages**, **16 course units**, **53 command examples**, **12 safe simulated labs**, **8 YouTube videos** and optional registration prepared for Supabase Auth. The homepage is intentionally short. The account UI remains disabled until secure authentication is configured; public lessons remain open. No real shell commands are executed.
+Academia Linux is an independent, bilingual (European Portuguese/English) learning site with **9 separate pages**, **16 course units**, **53 command examples**, **12 safe simulated labs**, **8 YouTube videos** and optional registration prepared for Supabase Auth. The homepage is intentionally short. The account UI remains disabled until secure authentication is configured; public lessons remain open. No real shell commands are executed.
 
 
 ## Integração do Peppery Linux
