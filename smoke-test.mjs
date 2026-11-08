@@ -25,7 +25,7 @@ function openPage(name, query='') {
   const doc = window.document;
   assert.ok(doc.querySelector('.site-header'), name + ': site header missing');
   assert.ok(doc.querySelector('main'), name + ': main content missing');
-  assert.equal(doc.querySelectorAll('.nav a').length, 6, name + ': navigation');
+  assert.equal(doc.querySelectorAll('.nav a').length, 7, name + ': navigation');
   return { dom, window, doc };
 }
 function click(window, element) {
