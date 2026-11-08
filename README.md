@@ -134,3 +134,8 @@ O GitHub Actions executa os testes automaticamente.
 ## English summary
 
 Academia Linux is an independent, bilingual (European Portuguese/English) learning site with **8 separate pages**, **16 course units**, **53 command examples**, **12 safe simulated labs**, **8 YouTube videos** and optional registration prepared for Supabase Auth. The homepage is intentionally short. The account UI remains disabled until secure authentication is configured; public lessons remain open. No real shell commands are executed.
+
+
+## Integração do Peppery Linux
+
+A Academia apresenta agora uma página pública [Peppery Linux](peppery.html), que referencia o projeto [Nekas1980/peppery-linux](https://github.com/Nekas1980/peppery-linux). São seis perfis planeados: Core, Dev, Data, Forensics, SOC e Pentest Lab opcional. A página identifica claramente a base Ubuntu 26.04 LTS e o estado **0.1.0-dev**, sem prometer imagens bootáveis ou acesso remoto já operacionais. O Peppery reutiliza o kernel fornecido por Ubuntu; não desenvolve kernel novo nesta versão. Para dar a cada aluno um terminal Linux real teremos de validar a imagem numa VM isolada e usar um serviço de laboratórios com limites de recursos, sessões e resets. Supabase destina-se às contas, progresso e conteúdos reservados; não é um hipervisor.
