@@ -5,3 +5,20 @@
 .video-layout.list .video-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
 .video-layout.list .video-card{padding:18px}
 @media(max-width:760px){.video-layout.list .video-cards{grid-template-columns:1fr}}
+
+/* Página de identidade - atributos hidden têm sempre prioridade sobre layouts. */
+[hidden]{display:none!important}
+#academy-student-security{margin-top:24px;border-top:1px solid var(--line);padding-top:15px}
+.academy-security-section{border:1px solid var(--line);border-radius:11px;padding:19px;margin:15px 0;background:#111f1b}
+.academy-security-section h3{margin:0 0 10px;font-size:18px}
+.academy-security-section p{color:#d1d9d5;font-size:13px;line-height:1.55}
+.academy-security-note{margin:12px 0;padding:10px 12px;border-left:3px solid #6a9c8b;background:#1b352a}
+.academy-security-note.warn{border-left-color:#edaa51;background:#523612;color:#ffe0ac}
+.academy-security-note.success{border-left-color:#a0dd9a;background:#183c26;color:#d9ffe0}
+.academy-security-note.subtle{background:transparent;border-left-color:#8a9e92}
+.academy-field{display:grid;gap:6px;font-weight:700;font-size:13px;color:#fff}
+.academy-field input,.academy-field select{display:block;width:100%;background:#101a18;color:#f0fff3;border:1px solid #668176;border-radius:7px;padding:10px 12px;min-height:44px}
+.academy-field option{background:#18251e}
+.academy-mfa-qr{display:block;width:min(230px,100%);height:auto;background:white;border-radius:8px;padding:10px;margin:12px auto}
+#auth-session{min-width:0}
+#auth-session .btn{margin:4px}
