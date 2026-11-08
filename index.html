@@ -1,58 +1,19 @@
 <!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d1725">
-  <meta name="description" content="Academia Linux: unidades de aprendizagem gratuitas, história do Linux, distribuições, terminal simulado, exercícios e vídeos em português e inglês.">
-  <meta name="color-scheme" content="dark light">
-  <title>Academia Linux — Aprender. Praticar. Evoluir.</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
-  <script src="curriculum.js" defer></script>
-  <script src="app.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1726">
+<meta name="description" content="Início da Academia Linux: cursos, comandos, laboratórios e vídeos, em português e inglês.">
+<meta name="color-scheme" content="light">
+<title>Academia Linux — Aprender e praticar Linux</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="portal.css">
+<script src="curriculum.js" defer></script>
+<script src="conteudos-extra.js" defer></script>
+<script src="portal.js" defer></script>
 </head>
-<body>
-<a class="skip-link" href="#conteudo" data-i18n="skip">Saltar para o conteúdo</a>
-<header class="site-header">
-  <div class="header-inner container">
-    <a class="logo" href="#inicio" aria-label="Academia Linux — início"><span class="logo-mark" aria-hidden="true">$<span class="logo-cursor">_</span></span><span>academia<span class="logo-highlight">linux</span><small>OPEN LEARNING LAB</small></span></a>
-    <nav class="desktop-nav" aria-label="Menu principal"><a href="#sobre" data-i18n="navAbout">A academia</a><a href="#percursos" data-i18n="navPaths">Unidades</a><a href="#distribuicoes" data-i18n="navDistros">Distribuições</a><a href="#terminal" data-i18n="navTerminal">Laboratório</a><a href="#videos" data-i18n="navVideos">Vídeos</a></nav>
-    <div class="header-actions"><div class="lang-switch" role="group" aria-label="Language / Idioma"><button type="button" id="lang-pt" class="lang-button active" aria-pressed="true">PT</button><button type="button" id="lang-en" class="lang-button" aria-pressed="false">EN</button></div><a href="#percursos" class="header-cta" data-i18n="navStart">Começar <span aria-hidden="true">↗</span></a></div>
-  </div>
-</header>
-<main id="conteudo">
-  <section id="inicio" class="hero">
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="container hero-grid">
-      <div class="hero-copy"><span class="eyebrow"><span class="live-dot"></span> <span data-i18n="eyebrow">ACADEMIA ABERTA · APRENDIZAGEM GRATUITA</span></span>
-        <h1 data-i18n-html="heroTitle">Aprende Linux.<br><span>Compreende o sistema.</span><br>Domina o terminal.</h1>
-        <p class="hero-desc" data-i18n="heroDesc">Da história das distribuições aos comandos e à segurança. Unidades curtas, demonstrações interativas e recursos selecionados para evoluir ao teu ritmo.</p>
-        <div class="hero-buttons"><a class="button primary" href="#percursos"><span data-i18n="explore">Explorar unidades</span><span aria-hidden="true">↗</span></a><a class="button ghost" href="#terminal"><span data-i18n="tryTerminal">Experimentar o terminal</span><span aria-hidden="true">⌁</span></a></div>
-        <div class="hero-highlights"><span>✦ <span data-i18n="free">100% gratuito</span></span><span>◎ <span data-i18n="bilingual">Português / English</span></span><span>◇ <span data-i18n="noInstall">Sem instalações</span></span></div>
-      </div>
-      <div class="hero-window" aria-label="Exemplo de terminal Linux"><div class="window-head"><span class="window-buttons"><i></i><i></i><i></i></span><span>student@linux-academy:~</span><span class="window-signal">● <span data-i18n="online">online</span></span></div>
-        <div class="window-body"><div><span class="prompt">aluno@academia</span>:<span class="path">~</span>$ <span class="cmd">whoami</span></div><div class="window-output">linux_learner</div><div class="window-gap"></div><div><span class="prompt">aluno@academia</span>:<span class="path">~</span>$ <span class="cmd">uname -s</span></div><div class="window-output">Linux</div><div class="window-gap"></div><div><span class="prompt">aluno@academia</span>:<span class="path">~</span>$ <span class="cmd">echo "Hello, Linux!"</span></div><div class="window-output">Hello, Linux!</div><div><span class="prompt">aluno@academia</span>:<span class="path">~</span>$ <span class="caret">▋</span></div></div>
-        <div class="window-foot"><span>bash — demo</span><span data-i18n="simulated">AMBIENTE SIMULADO</span></div>
-        <div class="window-sticker">&lt;/&gt;<small>LEARN<br>BY DOING</small></div>
-      </div>
-    </div>
-    <div class="container stats-bar"><div><strong id="stat-units">12</strong><span data-i18n="statUnits">Unidades de aprendizagem</span></div><div><strong>02</strong><span data-i18n="statLanguages">Idiomas</span></div><div><strong>06</strong><span data-i18n="statFamilies">Distribuições em destaque</span></div><div><strong>0€</strong><span data-i18n="statPrice">Custo de acesso</span></div></div>
-  </section>
-  <section class="section section-about" id="sobre"><div class="container"><div class="section-heading"><div><p class="section-kicker" data-i18n="aboutKicker">COMEÇAR PELO ESSENCIAL</p><h2 data-i18n="aboutTitle">O Linux não é só uma linha de comandos.</h2></div><p data-i18n="aboutDesc">É um ecossistema de comunidades, sistemas e ferramentas. Aqui aprendes o que está por trás de cada comando — e quando o utilizar.</p></div>
-    <div class="feature-grid"><article class="feature"><span class="feature-icon">01 /</span><h3 data-i18n="f1Title">Aprendizagem estruturada</h3><p data-i18n="f1Desc">Unidades de curta duração, objetivos claros e exercícios de consolidação.</p></article><article class="feature"><span class="feature-icon">02 &gt;</span><h3 data-i18n="f2Title">Prática segura</h3><p data-i18n="f2Desc">Um terminal didático que simula respostas. Não executa comandos no teu equipamento.</p></article><article class="feature"><span class="feature-icon">03 ▶</span><h3 data-i18n="f3Title">Fontes credíveis</h3><p data-i18n="f3Desc">Documentação oficial, vídeos dos autores e ligações diretas para aprofundar.</p></article></div>
-  </div></section>
-  <section class="section section-courses" id="percursos"><div class="container"><div class="section-heading"><div><p class="section-kicker" data-i18n="courseKicker">PLANO DE ESTUDOS</p><h2 data-i18n="courseTitle">Pequenas unidades. Competências reais.</h2></div><p data-i18n="courseDesc">Percorre os fundamentos, conhece os principais sistemas e avança até à administração e segurança.</p></div>
-    <div class="course-toolbar"><label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only" data-i18n="searchLabel">Pesquisar unidades</span><input id="course-search" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="Pesquisar por tema, comando ou ferramenta"></label><div class="filters" id="course-filters" role="group" aria-label="Filtrar por nível"><button class="filter active" type="button" data-level="all" data-i18n="filterAll">Todas</button><button class="filter" type="button" data-level="beginner" data-i18n="filterBeginner">Iniciação</button><button class="filter" type="button" data-level="intermediate" data-i18n="filterIntermediate">Intermédio</button><button class="filter" type="button" data-level="advanced" data-i18n="filterAdvanced">Aplicação</button></div></div>
-    <div class="course-grid" id="course-grid"></div><p class="empty-state" id="no-courses" hidden data-i18n="noResults">Não foram encontradas unidades. Experimenta outra pesquisa.</p>
-  </div></section>
-  <section class="section section-history" id="historia"><div class="container"><div class="section-heading"><div><p class="section-kicker" data-i18n="historyKicker">UMA HISTÓRIA DE COLABORAÇÃO</p><h2 data-i18n="historyTitle">Das primeiras ideias ao mundo atual.</h2></div><p data-i18n="historyDesc">Uma cronologia breve para distinguir o projeto GNU, o kernel Linux e as distribuições completas.</p></div><div class="timeline" id="timeline"></div><p class="source-note"><span data-i18n="sourceLine">Fontes históricas:</span> <a href="https://www.gnu.org/gnu/gnu.html" target="_blank" rel="noopener noreferrer">GNU</a> · <a href="https://www.linuxfoundation.org/research/35-years-of-linux" target="_blank" rel="noopener noreferrer">Linux Foundation</a> · <a href="https://www.debian.org/doc/manuals/project-history/intro" target="_blank" rel="noopener noreferrer">Debian</a></p></div></section>
-  <section class="section section-distros" id="distribuicoes"><div class="container"><div class="section-heading"><div><p class="section-kicker" data-i18n="distroKicker">ESCOLHER O AMBIENTE CERTO</p><h2 data-i18n="distroTitle">Um kernel. Muitas distribuições.</h2></div><p data-i18n="distroDesc">Cada distribuição combina o kernel com aplicações, pacotes e decisões de manutenção. Compara objetivos e ferramentas.</p></div><div class="distro-grid" id="distro-grid"></div><div class="comparison-box"><div><h3 data-i18n="packageTitle">Gestores de pacotes em perspetiva</h3><p data-i18n="packageDesc">O comando varia conforme a família da distribuição. Consulta sempre a documentação antes de alterar o sistema.</p></div><div class="package-matrix" id="package-matrix"></div></div></div></section>
-  <section class="section section-lab" id="terminal"><div class="container"><div class="section-heading"><div><p class="section-kicker" data-i18n="labKicker">LABORATÓRIO DIDÁTICO</p><h2 data-i18n="labTitle">O teu primeiro terminal.</h2></div><p data-i18n="labDesc">Experimenta os comandos sugeridos e observa uma resposta demonstrativa. Este ambiente não se liga ao teu sistema Linux.</p></div><div class="lab-shell"><div class="lab-head"><div class="lab-tabs"><span class="lab-dot"></span><span data-i18n="labTab">Terminal de demonstração</span></div><span class="lab-status"><span class="status-dot"></span> <span data-i18n="sandbox">SIMULAÇÃO · SEM EXECUÇÃO REAL</span></span></div><div class="lab-layout"><div class="terminal-pane"><div id="terminal-output" role="log" aria-live="polite" aria-label="Saída do terminal"></div><form id="terminal-form" autocomplete="off"><label class="terminal-prompt" for="terminal-input">student@academy:~$</label><input id="terminal-input" type="text" spellcheck="false" autocapitalize="none" autocomplete="off" aria-label="Introduzir comando de demonstração" placeholder="pwd" maxlength="100"><button type="submit" class="terminal-run" data-i18n="run">Executar ↵</button></form></div><aside class="lab-side"><span class="lab-label" data-i18n="tryThese">EXPERIMENTA ESTES COMANDOS</span><div id="demo-commands"></div><button id="terminal-clear" class="text-action" type="button" data-i18n="clearTerminal">↻ Limpar terminal</button><div class="lab-hint"><strong data-i18n="important">Importante</strong><p data-i18n="simNotice">As respostas são exemplos fixos de aprendizagem. Nenhum comando é enviado para um servidor ou executado no teu computador.</p></div></aside></div></div></div></section>
-  <section class="section section-videos" id="videos"><div class="container"><div class="section-heading"><div><p class="section-kicker" data-i18n="videoKicker">APRENDER COM A COMUNIDADE</p><h2 data-i18n="videoTitle">Vídeos para ver e praticar.</h2></div><p data-i18n="videoDesc">Conteúdos disponibilizados pelos respetivos canais no YouTube. São abertos num novo separador, sem descarregar nem republicar os vídeos.</p></div><div class="video-grid" id="video-grid"></div><p class="source-note" data-i18n="videoPrivacy">O vídeo é carregado do YouTube apenas após o teu clique; o serviço externo poderá recolher dados.</p></div></section>
-  <section class="section section-resources" id="recursos"><div class="container resources-inner"><div><p class="section-kicker" data-i18n="resourceKicker">BIBLIOTECA DE REFERÊNCIA</p><h2 data-i18n="resourceTitle">Aprender bem começa nas fontes certas.</h2><p data-i18n="resourceDesc">Guarda estes recursos e confirma sempre os comandos na documentação da tua distribuição.</p></div><div class="resource-list" id="resource-list"></div></div></section>
-  <section class="section section-next" id="futuro"><div class="container next-panel"><div><span class="section-kicker" data-i18n="nextKicker">O PRÓXIMO PASSO</span><h2 data-i18n="nextTitle">Da teoria a um laboratório real.</h2><p data-i18n="nextDesc">A base da academia já inclui teoria, exercícios e um simulador. Futuramente poderá receber laboratórios Linux isolados, avaliações por unidade e percursos especializados em redes, servidores e cibersegurança.</p></div><a class="button primary" href="#percursos"><span data-i18n="startNow">Começar a aprender</span><span aria-hidden="true">↗</span></a></div></section>
-</main>
-<dialog id="lesson-dialog" class="lesson-dialog" aria-labelledby="lesson-title"><div class="lesson-content"><div class="lesson-top"><span id="lesson-code">UC 01</span><button type="button" id="lesson-close" class="close-button" aria-label="Fechar">×</button></div><div id="lesson-detail"></div></div></dialog>
-<footer class="footer"><div class="container footer-grid"><div><div class="footer-brand">$ _ <strong>academia<span>linux</span></strong></div><p data-i18n="footerText">Um projeto educativo independente. Conteúdos introdutórios em português e inglês. Aprender é para todos.</p></div><div><strong data-i18n="footerExplore">EXPLORAR</strong><a href="#percursos" data-i18n="navPaths">Unidades</a><a href="#distribuicoes" data-i18n="navDistros">Distribuições</a><a href="#terminal" data-i18n="navTerminal">Laboratório</a></div><div><strong data-i18n="footerInfo">INFORMAÇÃO</strong><a href="#recursos" data-i18n="resources">Fontes e documentação</a><a href="https://github.com/Nekas1980" target="_blank" rel="noopener noreferrer">GitHub ↗</a><span data-i18n="footerPrivacy">Sem contas, sem cookies analíticos. Progresso guardado apenas neste navegador.</span></div></div><div class="container footer-bottom"><span>© <span id="year"></span> Academia Linux · <span data-i18n="openLearning">Open learning</span></span><span data-i18n="independent">Projeto independente. Sem associação oficial às distribuições apresentadas.</span></div></footer>
-</body></html>
+<body data-page="home">
+<div id="app"><noscript>Para utilizar a Academia Linux, ativa JavaScript / Please enable JavaScript to access the academy.</noscript></div>
+</body>
+</html>
