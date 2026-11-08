@@ -32,3 +32,97 @@
 
 #academy-mfa-manual{max-width:100%;padding:12px;margin:10px 0;border:1px solid #557f72;border-radius:7px;background:#0b1a16}
 #academy-mfa-secret{display:block;white-space:normal;overflow-wrap:anywhere;user-select:text;padding:12px;color:#efffe8;background:#152821;border:1px dashed #7ea590;border-radius:6px;line-height:1.6;letter-spacing:.06em;font-size:14px}
+
+
+/* ACADEMIA LINUX — MELHORIAS VISUAIS */
+
+.btn {
+    padding: 16px 28px;
+    min-height: 52px;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+}
+
+.btn:focus-visible {
+    outline: 3px solid #7bd99e;
+    outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+
+    .btn:hover {
+        transform: none;
+    }
+}
+
+
+/* ACADEMIA LINUX 3.0 — IDENTIDADE VISUAL */
+
+body[data-page="home"] .hero {
+    background:
+      radial-gradient(circle at 85% 25%,
+        rgba(35, 220, 170, .22), transparent 38%),
+      radial-gradient(circle at 10% 85%,
+        rgba(126, 92, 240, .17), transparent 42%),
+      linear-gradient(130deg, #08111f, #102a35);
+}
+
+body[data-page="home"] .hero-terminal {
+    border: 1px solid #4b9786;
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .35);
+}
+
+body[data-page="home"] .feature-section:not(.alt) {
+    background: linear-gradient(145deg, #0c1922, #13291f);
+}
+
+body[data-page="home"] .intro-row h2 {
+    color: #f1fff5;
+}
+
+body[data-page="home"] .intro-row p {
+    color: #b9d0c5;
+}
+
+body[data-page="home"] .cards .card {
+    background: linear-gradient(150deg, #19313a, #111d27);
+    border: 1px solid #42665f;
+    border-radius: 18px;
+    color: #f0fff5;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .15);
+    transition: transform .25s ease,
+                box-shadow .25s ease;
+}
+
+body[data-page="home"] .cards .card p {
+    color: #c5d7d1;
+}
+
+body[data-page="home"] .cards .card a {
+    color: #9df2cb;
+}
+
+body[data-page="home"] .cards .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body[data-page="home"] .cards .card {
+        transition: none;
+    }
+
+    body[data-page="home"] .cards .card:hover {
+        transform: none;
+    }
+}
