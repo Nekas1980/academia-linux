@@ -3,3 +3,8 @@ window.ACADEMY_AUTH_CONFIG = {
   url: '',
   publishableKey: ''
 };
+
+window.ACADEMY_AUTH_CONFIG = {
+  url: 'https://ENDERECO-DO-TEU-PROJETO.supabase.co',
+  publishableKey: 'sb_publishable_COLOCA_AQUI_A_TUA_CHAVE_PUBLICA'
+};
