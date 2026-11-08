@@ -281,4 +281,34 @@ for (const page of pages) {
   assert.equal(doc.querySelector('#academy-mfa-secret').textContent,'JBSWY3DPEHPK3PXP');
   dom.window.close();
 }
+
+{
+  // Password policy for new credentials must not block existing users from
+  // logging in with a shorter legacy password created by an administrator.
+  const {doc,window,dom}=openPage('inscricao.html');
+  window.eval(source('auth-config.js'));
+  let calls=0;
+  const user={id:'00000000-0000-4000-8000-000000000889',email:'legacy@example.invalid'};
+  window.supabase={createClient:()=>({
+    auth:{
+      getSession:async()=>({data:{session:null},error:null}),
+      onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),
+      signInWithPassword:async({email,password})=>{
+        assert.equal(email,user.email);
+        assert.equal(password,'short123');
+        calls++;
+        return {data:{user,session:{user}},error:null};
+      }
+    }
+  })};
+  window.eval(source('auth.js'));
+  doc.dispatchEvent(new window.Event('DOMContentLoaded'));
+  await new Promise(done=>setTimeout(done,35));
+  doc.querySelector('#auth-email').value=user.email;
+  doc.querySelector('#auth-password').value='short123';
+  submit(window,doc.querySelector('#auth-form'));
+  await new Promise(done=>setTimeout(done,35));
+  assert.equal(calls,1,'Legacy password must reach Supabase instead of failing local length check');
+  dom.window.close();
+}
 console.log('OK: '+tested+' pages + public/premium gates, PT/EN, quiz, commands, missions, videos, and signup safeguards.');
