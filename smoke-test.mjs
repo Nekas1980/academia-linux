@@ -243,4 +243,42 @@ for (const page of pages) {
   assert.ok(doc.querySelector('#academy-enroll'),'Enrollment can restart after cleanup');
   dom.window.close();
 }
+
+{
+  // QR indisponível ou não legível: disponibilizar entrada manual da chave TOTP.
+  const {doc,window,dom}=openPage('inscricao.html');
+  window.eval(source('auth-config.js'));
+  const mockUser={id:'00000000-0000-4000-8000-000000000778',email:'student@example.invalid',app_metadata:{}};
+  const client={
+    auth:{
+      getSession:async()=>({data:{session:{user:mockUser}},error:null}),
+      getUser:async()=>({data:{user:mockUser},error:null}),
+      onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),
+      mfa:{
+        getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:'aal1',nextLevel:'aal1'},error:null}),
+        listFactors:async()=>({data:{totp:[],all:[]},error:null}),
+        enroll:async()=>({data:{id:'factor-testing',totp:{
+          qr_code:'data:image/svg+xml;base64,ZmFrZQ==',
+          secret:'JBSWY3DPEHPK3PXP'
+        }},error:null})
+      }
+    },
+    from:table=>({select:()=>({eq:()=>({maybeSingle:async()=>({
+      data:table==='student_security'?{must_change_password:false}:null,error:null
+    })})})})
+  };
+  window.supabase={createClient:()=>client};
+  window.eval(source('auth.js'));
+  window.eval(source('academy-security.js'));
+  doc.dispatchEvent(new window.Event('DOMContentLoaded'));
+  await new Promise(done=>setTimeout(done,45));
+  click(window,doc.querySelector('#academy-enroll'));
+  await new Promise(done=>setTimeout(done,45));
+  assert.ok(doc.querySelector('#academy-manual-mfa'),'Expected manual setup option');
+  assert.equal(doc.querySelector('#academy-mfa-manual').hidden,true,'Secret must start hidden');
+  click(window,doc.querySelector('#academy-manual-mfa'));
+  assert.equal(doc.querySelector('#academy-mfa-manual').hidden,false,'Manual key only revealed on request');
+  assert.equal(doc.querySelector('#academy-mfa-secret').textContent,'JBSWY3DPEHPK3PXP');
+  dom.window.close();
+}
 console.log('OK: '+tested+' pages + public/premium gates, PT/EN, quiz, commands, missions, videos, and signup safeguards.');
