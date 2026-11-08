@@ -79,6 +79,25 @@ for (const page of pages) {
   dom.window.close();
 }
 {
+  const {doc,window,dom}=openPage('cursos.html');
+  assert.equal(doc.querySelectorAll('#course-cards .card').length,16);
+  const lockCards=Array.from(doc.querySelectorAll('#course-cards .card')).filter(x=>/Reservado a alunos registados/.test(x.textContent));
+  assert.equal(lockCards.length,4,'Four advanced courses must be labelled members only');
+  dom.window.close();
+}
+{
+  const {doc,window,dom}=openPage('aula.html','?uc=UC12');
+  assert.ok(doc.querySelector('#member-content'),'Protected lesson placeholder');
+  assert.equal(doc.querySelector('#quiz-form'),null,'Do not render premium quiz publicly');
+  assert.ok(doc.querySelector('a[href="inscricao.html?next=UC12"]'),'Safe login CTA');
+  window.eval(source('auth-config.js'));
+  window.eval(source('member-access.js'));
+  assert.equal(doc.querySelectorAll('#member-quiz').length,0,'Protected lesson must not load without credentials');
+  click(window,doc.querySelector('#en'));
+  assert.ok(doc.querySelector('#member-content'),'Language switch retains protected gate');
+  dom.window.close();
+}
+{
   const {doc,window,dom}=openPage('comandos.html');
   assert.ok(doc.querySelectorAll('.cmd-card').length>=50,'50+ commands');
   change(window,doc.querySelector('#cmd-query'),'pwd');
@@ -119,4 +138,4 @@ for (const page of pages) {
   assert.ok(doc.querySelector('a[href="privacidade.html"]'),'Privacy notice link');
   dom.window.close();
 }
-console.log('OK: '+tested+' pages + home, search, PT/EN, quiz, commands, mission, video modes and registration safeguards.');
+console.log('OK: '+tested+' pages + public/premium gates, PT/EN, quiz, commands, missions, videos, and signup safeguards.');
