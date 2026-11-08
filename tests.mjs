@@ -44,7 +44,7 @@ for(const lab of E.labs){
   for(const lang of ['pt','en'])assert.ok(lab[lang]?.length===2);
   assert.ok(lab.steps?.length>=2);
 }
-const routes=['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html'];
+const routes=['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html','peppery.html'];
 const files=['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','portal.css','favicon.svg','backend/supabase/001_modelo_misto.sql'];
 for(const f of files)assert.ok(fs.existsSync(path.join(root,f)),f);
 for(const f of ['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js'])new vm.Script(file(f),{filename:f});
@@ -62,6 +62,7 @@ assert.match(file('portal.js'),/youtube-nocookie\.com\/embed/);
 assert.match(file('portal.js'),/localStorage/);
 assert.match(file('portal.js'),/SIMULAÇÃO|SIMULATION/);
 assert.match(file('portal.js'),/privacidade\.html/);
+assert.match(file('portal.js'),/peppery\.html/);
 assert.match(file('aula.html'),/src="member-access.js"/);
 assert.match(file('aula.html'),/src="auth-config.js"/);
 assert.match(file('portal.js'),/member-content/);
