@@ -5,7 +5,7 @@ import { JSDOM, VirtualConsole } from 'jsdom';
 
 const here = path.dirname(new URL(import.meta.url).pathname);
 const source = name => fs.readFileSync(path.join(here, name), 'utf8');
-const pages = ['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html'];
+const pages = ['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html','peppery.html'];
 let tested = 0;
 function openPage(name, query='') {
   const errors = [];
@@ -53,10 +53,19 @@ for (const page of pages) {
 }
 {
   const {doc,dom}=openPage('index.html');
-  assert.equal(doc.querySelectorAll('.card').length,6,'Home page navigation cards');
+  assert.equal(doc.querySelectorAll('.card').length,7,'Home page navigation cards');
   dom.window.close();
 }
 {
+{ 
+ const {doc,window,dom}=openPage('peppery.html');
+ assert.match(doc.body.textContent,/Peppery Linux/,'Peppery page loads');
+ assert.match(doc.body.textContent,/Ubuntu 26\.04/,'Peppery distro base');
+ assert.ok(doc.querySelector('a[href="https://github.com/Nekas1980/peppery-linux"]'),'Peppery source link');
+ click(window,doc.querySelector('#en'));
+ assert.match(doc.body.textContent,/technical profiles/i,'Peppery English content');
+ dom.window.close();
+}
   const {doc,window,dom}=openPage('cursos.html');
   assert.equal(doc.querySelectorAll('#course-cards .card').length,16,'16 course cards');
   change(window,doc.querySelector('#course-query'),'UC01');
