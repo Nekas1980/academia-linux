@@ -28,8 +28,8 @@ consent.hidden=tab!=='signup';
 const kind=recovery?'update':tab;submit.textContent=labels[kind][lang()==='pt'?0:1];
 $('#auth-state').textContent=session?tr('Sessão autenticada.','Authenticated session.'):configured?(allowSignup?tr('Confirma o email recebido após criares a conta.','Confirm your email after registration.'):tr('Acesso a alunos existentes. Novas inscrições temporariamente encerradas.','Existing student access. New registrations are temporarily closed.')):tr('Autenticação indisponível: falta configurar a ligação segura.','Authentication unavailable: secure connection is not configured.');
 $('#auth-state').className='auth-note'+(configured?'':' warn');
-$('#auth-session').hidden=!session;
-form.hidden=!!session;
+$('#auth-session').hidden=!session||recovery;
+form.hidden=!!session&&!recovery;
 if(session){
  const user=$('#auth-user');user.textContent=tr('Conta: ','Account: ')+(session.user?.email||'');
  const next=(new URLSearchParams(location.search).get('next')||'').toUpperCase();
