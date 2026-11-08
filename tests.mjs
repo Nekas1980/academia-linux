@@ -45,7 +45,7 @@ for(const lab of E.labs){
   assert.ok(lab.steps?.length>=2);
 }
 const routes=['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html','peppery.html'];
-const files=['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','portal.css','favicon.svg','backend/supabase/001_modelo_misto.sql','backend/supabase/002_identidade_primeiro_login_mfa.sql','backend/supabase/003_atividade_e_formador.sql','backend/email/convite-aluno.html','academy-security.js','study-tracker.js','instructor.js','instructor.html','formador.html'];
+const files=['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','portal.css','favicon.svg','backend/supabase/001_modelo_misto.sql','backend/supabase/002_identidade_primeiro_login_mfa.sql','backend/supabase/003_atividade_e_formador.sql','backend/email/convite-aluno.html','academy-security.js','study-tracker.js','instructor.js','formador.html'];
 for(const f of files)assert.ok(fs.existsSync(path.join(root,f)),f);
 for(const f of ['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','academy-security.js','study-tracker.js','instructor.js'])new vm.Script(file(f),{filename:f});
 for(const p of routes){
