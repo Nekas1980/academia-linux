@@ -21,6 +21,10 @@ jobs:
           node --check portal.js
           node --check auth.js
           node --check auth-config.js
+          node --check academy-security.js
+          node --check study-tracker.js
+          node --check instructor.js
+          node --check member-access.js
       - name: Testar estrutura e conteúdos
         run: node tests.mjs
       - name: Instalar dependência de teste DOM
