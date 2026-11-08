@@ -1,28 +1,55 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
-global.window = {};
-require('./curriculum.js');
-const data = window.ACADEMY;
-assert.equal(data.units.length,16,'16 unidades de aprendizagem');
-assert.equal(new Set(data.units.map(u=>u.id)).size,data.units.length,'IDs exclusivos');
-for(const unit of data.units){
-  assert.match(unit.id,/^UC\d{2}$/);
-  assert.ok(['beginner','intermediate','advanced'].includes(unit.level));
+import vm from 'node:vm';
+import path from 'node:path';
+const root=path.dirname(new URL(import.meta.url).pathname);
+const file=name=>fs.readFileSync(path.join(root,name),'utf8');
+const context={window:{}};vm.createContext(context);
+vm.runInContext(file('curriculum.js'),context,{filename:'curriculum.js'});
+vm.runInContext(file('conteudos-extra.js'),context,{filename:'conteudos-extra.js'});
+const {ACADEMY:A,ACADEMY_EXTRA:E}=context.window;
+assert.equal(A.units.length,16);
+assert.equal(E.commands.length>=50,true);
+assert.equal(E.labs.length,12);
+assert.equal(A.videos.length+E.videosExtra.length>=8,true);
+assert.equal(new Set(A.units.map(u=>u.id)).size,A.units.length);
+assert.equal(new Set(E.labs.map(l=>l.id)).size,E.labs.length);
+assert.equal(new Set(E.commands.map(c=>c[1])).size,E.commands.length);
+for(const unit of A.units){
   for(const lang of ['pt','en']){
-    const lesson=unit[lang];
-    for(const key of ['title','summary','goals','steps','commands','quiz','source']) assert.ok(lesson[key],`${unit.id}.${lang}.${key}`);
-    assert.equal(lesson.steps.length,3,`${unit.id}.${lang}: 3 etapas`);
-    assert.ok(lesson.commands.length>0);
-    assert.ok(lesson.quiz[2]>=0 && lesson.quiz[2]<lesson.quiz[1].length);
-    assert.ok(lesson.source.startsWith('https://'));
+    const x=unit[lang];
+    assert.ok(x?.title&&x.summary&&x.steps?.length>=3&&x.commands?.length&&x.quiz?.length>=3,unit.id+' '+lang);
+    assert.ok(x.quiz[2]>=0&&x.quiz[2]<x.quiz[1].length);
   }
 }
-assert.equal(data.distros.length,6);
-assert.equal(data.videos.length,4);
-for(const v of data.videos) assert.match(v.id,/^[A-Za-z0-9_-]{11}$/);
-const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
-for(const id of ['course-grid','distro-grid','terminal-output','lesson-dialog','video-grid']) assert.ok(html.includes(`id="${id}"`));
-assert.ok(!/gtag\(|google-analytics\.com|chatbot|chatgpt/i.test(html),'Não incorporar chat ou analytics');
-console.log('OK · 16 UCs bilingues, 6 distribuições, 4 vídeos e estrutura HTML validada.');
+for(const cmd of E.commands){
+  assert.equal(cmd.length,5);
+  assert.ok(cmd[0].includes('|')&&cmd[1]&&cmd[2]&&cmd[3]&&cmd[4]);
+}
+const validVideoIds=[...A.videos,...E.videosExtra];
+for(const v of validVideoIds)assert.match(v.id,/^[A-Za-z0-9_-]{11}$/);
+for(const lab of E.labs){
+  for(const lang of ['pt','en'])assert.ok(lab[lang]?.length===2);
+  assert.ok(lab.steps?.length>=2);
+}
+const routes=['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html'];
+const files=['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','portal.css','favicon.svg'];
+for(const f of files)assert.ok(fs.existsSync(path.join(root,f)),f);
+for(const f of ['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js'])new vm.Script(file(f),{filename:f});
+for(const p of routes){
+  const html=file(p);
+  assert.match(html,/<html lang="pt-PT">/);
+  assert.match(html,/<div id="app">/);
+  assert.match(html,/href="portal.css"/);
+  for(const js of ['curriculum.js','conteudos-extra.js','portal.js'])assert.ok(html.includes('src="'+js+'"'),p+' needs '+js);
+  assert.ok(!/chatbot|chatgpt|gtag\(|google-analytics\.com/i.test(html),'No assistant chat/tracking');
+}
+assert.match(file('inscricao.html'),/src="auth-config.js"/);
+assert.match(file('inscricao.html'),/src="auth.js"/);
+assert.match(file('portal.js'),/youtube-nocookie\.com\/embed/);
+assert.match(file('portal.js'),/localStorage/);
+assert.match(file('portal.js'),/SIMULAÇÃO|SIMULATION/);
+assert.match(file('portal.js'),/privacidade\.html/);
+const authConfig=file('auth-config.js');
+assert.doesNotMatch(authConfig,/sb_secret_|service_role|eyJ[A-Za-z0-9_-]{50,}/);
+console.log('OK · 8 páginas; '+A.units.length+' UCs PT/EN; '+E.commands.length+' comandos; '+E.labs.length+' labs; '+validVideoIds.length+' vídeos; JS e ligações verificados.');
