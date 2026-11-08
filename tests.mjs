@@ -45,9 +45,9 @@ for(const lab of E.labs){
   assert.ok(lab.steps?.length>=2);
 }
 const routes=['index.html','cursos.html','aula.html','comandos.html','laboratorios.html','videos.html','inscricao.html','privacidade.html','peppery.html'];
-const files=['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','portal.css','favicon.svg','backend/supabase/001_modelo_misto.sql'];
+const files=['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','portal.css','favicon.svg','backend/supabase/001_modelo_misto.sql','backend/supabase/002_identidade_primeiro_login_mfa.sql','backend/supabase/003_atividade_e_formador.sql','backend/email/convite-aluno.html','academy-security.js','study-tracker.js','instructor.js','formador.html'];
 for(const f of files)assert.ok(fs.existsSync(path.join(root,f)),f);
-for(const f of ['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js'])new vm.Script(file(f),{filename:f});
+for(const f of ['curriculum.js','conteudos-extra.js','portal.js','auth.js','auth-config.js','member-access.js','academy-security.js','study-tracker.js','instructor.js'])new vm.Script(file(f),{filename:f});
 for(const p of routes){
   const html=file(p);
   assert.match(html,/<html lang="pt-PT">/);
@@ -58,6 +58,30 @@ for(const p of routes){
 }
 assert.match(file('inscricao.html'),/src="auth-config.js"/);
 assert.match(file('inscricao.html'),/src="auth.js"/);
+assert.match(file('inscricao.html'),/src="academy-security.js"/);
+assert.match(file('aula.html'),/src="study-tracker.js"/);
+assert.match(file('laboratorios.html'),/src="study-tracker.js"/);
+assert.match(file('formador.html'),/src="instructor.js"/);
+assert.match(file('auth-config.js'),/enablePublicSignup: false/,'Public signup stays disabled');
+assert.match(file('auth.js'),/academy-auth-session/);
+assert.match(file('academy-security.js'),/\.auth\.mfa\.enroll\(/);
+assert.match(file('academy-security.js'),/\.auth\.updateUser\(\{password\}\)/);
+assert.match(file('study-tracker.js'),/student_activity/);
+assert.match(file('instructor.js'),/academy_role/);
+assert.match(file('instructor.js'),/aal2/);
+const sql2=file('backend/supabase/002_identidade_primeiro_login_mfa.sql');
+assert.match(sql2,/must_change_password/);
+assert.match(sql2,/encrypted_password/);
+assert.match(sql2,/enable row level security/);
+assert.match(sql2,/aal2/);
+const sql3=file('backend/supabase/003_atividade_e_formador.sql');
+assert.match(sql3,/student_activity/);
+assert.match(sql3,/academy_instructor_summary/);
+assert.match(sql3,/academy_instructor_activity/);
+assert.match(sql3,/security definer/);
+assert.match(file('backend/email/convite-aluno.html'),/\{\{ \.ConfirmationURL \}\}/);
+assert.doesNotMatch(file('backend/email/convite-aluno.html'),/password\s*:/i);
+
 assert.match(file('portal.js'),/youtube-nocookie\.com\/embed/);
 assert.match(file('portal.js'),/localStorage/);
 assert.match(file('portal.js'),/SIMULAÇÃO|SIMULATION/);
@@ -75,7 +99,7 @@ assert.doesNotMatch(dbMigration,/grant\s+select\s+on\s+table\s+public\.registere
 assert.doesNotMatch(file('portal.js'),/\.innerHTML\s*=/,'Never render application markup through innerHTML');
 assert.match(file('portal.js'),/new DOMParser\(\)/,'HTML parser is inert before sanitized DOM copy');
 assert.match(file('portal.js'),/replaceChildren\(/,'Sanitized fragments replace page children');
-assert.match(file('README.md'),/\*\*9 separate pages\*\*/,'README must reflect Peppery route');
+assert.match(file('README.md'),/\*\*10 separate pages\*\*/,'README must reflect instructor route');
 const authConfig=file('auth-config.js');
 assert.doesNotMatch(authConfig,/sb_secret_|service_role|eyJ[A-Za-z0-9_-]{50,}/);
-console.log('OK · 12 públicas + 4 reservadas; RLS e autenticação preparados; 9 páginas; '+A.units.length+' UCs PT/EN; '+E.commands.length+' comandos; '+E.labs.length+' labs; '+validVideoIds.length+' vídeos; JS e ligações verificados.');
+console.log('OK · 12 públicas + 4 reservadas; RLS e autenticação preparados; 10 páginas; '+A.units.length+' UCs PT/EN; '+E.commands.length+' comandos; '+E.labs.length+' labs; '+validVideoIds.length+' vídeos; JS e ligações verificados.');

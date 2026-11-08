@@ -50,6 +50,7 @@ Plataforma gratuita de aprendizagem Linux em **português de Portugal e inglês*
 | `inscricao.html` | Estrutura para registo, login e recuperação por email via Supabase Auth |
 | `privacidade.html` | Informação inicial de privacidade, a rever antes de ativar contas |
 | `peppery.html` | Peppery Linux, perfis técnicos e documentação da distribuição em desenvolvimento |
+| `formador.html` | Gestão de evolução pedagógica acessível só ao formador com papel admin e MFA AAL2 |
 
 Outros ficheiros: `portal.css`, `portal.js`, `conteudos-extra.js`, `curriculum.js`, `auth.js`, `auth-config.js`, `tests.mjs`, `.github/workflows/validar-site.yml` e `.nojekyll`.
 
@@ -138,9 +139,22 @@ O ficheiro `portal.js` utiliza um renderizador com `DOMParser` e cópia de nós 
 
 ## English summary
 
-Academia Linux is an independent, bilingual (European Portuguese/English) learning site with **9 separate pages**, **16 course units**, **53 command examples**, **12 safe simulated labs**, **8 YouTube videos** and optional registration prepared for Supabase Auth. The homepage is intentionally short. The account UI remains disabled until secure authentication is configured; public lessons remain open. No real shell commands are executed.
+Academia Linux is an independent, bilingual (European Portuguese/English) learning site with **10 separate pages**, **16 course units**, **53 command examples**, **12 safe simulated labs**, **8 YouTube videos** and optional registration prepared for Supabase Auth. The homepage is intentionally short. The account UI remains disabled until secure authentication is configured; public lessons remain open. No real shell commands are executed.
 
 
 ## Integração do Peppery Linux
 
 A Academia apresenta agora uma página pública [Peppery Linux](peppery.html), que referencia o projeto [Nekas1980/peppery-linux](https://github.com/Nekas1980/peppery-linux). São seis perfis planeados: Core, Dev, Data, Forensics, SOC e Pentest Lab opcional. A página identifica claramente a base Ubuntu 26.04 LTS e o estado **0.1.0-dev**, sem prometer imagens bootáveis ou acesso remoto já operacionais. O Peppery reutiliza o kernel fornecido por Ubuntu; não desenvolve kernel novo nesta versão. Para dar a cada aluno um terminal Linux real teremos de validar a imagem numa VM isolada e usar um serviço de laboratórios com limites de recursos, sessões e resets. Supabase destina-se às contas, progresso e conteúdos reservados; não é um hipervisor.
+
+
+## Próxima etapa: inscrição por convite, MFA e monitorização
+
+A infraestrutura de segurança avançada foi preparada nos ficheiros `backend/supabase/002_identidade_primeiro_login_mfa.sql` e `backend/supabase/003_atividade_e_formador.sql`, **ainda não executados no Supabase**. Não afirmar que a abertura de inscrições está concluída.
+
+Recomendamos **convites individuais enviados por email através do Supabase Auth**, em vez de enviar passwords provisórias em texto simples. O aluno segue a ligação de ativação, escolhe a primeira password pessoal (10+ caracteres, complexidade), confirma MFA TOTP e completa um perfil opcional de formação. Um estado controlado no servidor `must_change_password` impede acesso avançado antes da mudança, e as políticas RLS exigem AAL2 (MFA válido) para as aulas reservadas.
+
+A página `formador.html` apresenta progressão de unidades/laboratórios e eventos pedagógicos aos utilizadores com **`app_metadata.academy_role=admin` atribuído no servidor** e MFA AAL2. Não deve haver qualquer autorização administrativa baseada apenas no navegador ou em `user_metadata`.
+
+Os registos reais de login, recuperação de conta e MFA permanecem nos **Auth Audit Logs** nativos do Supabase. `student_activity` contém somente eventos pedagógicos de utilizadores autenticados e não substitui auditoria forense nem avaliação certificada. O progresso registado pelo browser é **autodeclarado** e só poderá contar para certificados quando existir avaliação validada por backend.
+
+O procedimento de rollout, privacidade e testes encontra-se em [backend/ONBOARDING_E_SEGURANCA.md](backend/ONBOARDING_E_SEGURANCA.md). O modelo de convite encontra-se em [backend/email/convite-aluno.html](backend/email/convite-aluno.html).

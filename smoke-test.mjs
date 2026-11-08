@@ -159,4 +159,48 @@ for (const page of pages) {
   assert.ok(doc.querySelector('a[href="privacidade.html"]'),'Privacy notice link');
   dom.window.close();
 }
+
+{
+  // Prova de regressão: um aluno já inscrito é obrigado a mudar
+  // a password no primeiro login antes de ver o assistente MFA.
+  const {doc,window,dom}=openPage('inscricao.html');
+  window.eval(source('auth-config.js'));
+  const mockUser={id:'00000000-0000-4000-8000-000000000123',email:'aluno@example.invalid',app_metadata:{}};
+  let mustChange=true;
+  const fakeClient={
+    auth:{
+      getSession:async()=>({data:{session:{user:mockUser}},error:null}),
+      getUser:async()=>({data:{user:mockUser},error:null}),
+      onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),
+      updateUser:async({password})=>{assert.ok(password.length>=10);mustChange=false;return {data:{user:mockUser},error:null}},
+      mfa:{
+        getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:'aal1',nextLevel:'aal1'},error:null}),
+        listFactors:async()=>({data:{totp:[]},error:null})
+      }
+    },
+    from:(table)=>({
+      select:()=>({
+        eq:()=>({
+          maybeSingle:async()=>({data:table==='student_security'?{must_change_password:mustChange}:null,error:null})
+        })
+      })
+    })
+  };
+  window.supabase={createClient:()=>fakeClient};
+  window.eval(source('auth.js'));
+  window.eval(source('academy-security.js'));
+  doc.dispatchEvent(new window.Event('DOMContentLoaded'));
+  await new Promise(done=>setTimeout(done,35));
+  assert.equal(doc.querySelector('#auth-form').hidden,true,'Login screen must be hidden after login');
+  assert.equal(doc.querySelector('#auth-session').hidden,false,'Session controls visible');
+  assert.equal(doc.querySelector('[data-auth-tab="signup"]').hidden,true,'Public signup still closed');
+  assert.ok(doc.querySelector('#academy-change-password'),'First login must require password change');
+  doc.querySelector('#academy-new-password').value='Unique#NewPassWord2026';
+  doc.querySelector('#academy-new-confirm').value='Unique#NewPassWord2026';
+  submit(window,doc.querySelector('#academy-change-password'));
+  await new Promise(done=>setTimeout(done,35));
+  assert.equal(mustChange,false,'Server password-change flag cleared');
+  assert.ok(doc.querySelector('#academy-mfa-panel'),'MFA onboarding follows password change');
+  dom.window.close();
+}
 console.log('OK: '+tested+' pages + public/premium gates, PT/EN, quiz, commands, missions, videos, and signup safeguards.');
